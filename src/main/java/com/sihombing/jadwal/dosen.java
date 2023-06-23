@@ -9,7 +9,6 @@ package com.sihombing.jadwal;
  * @author Rizky David L
  */
 public class dosen {
-    String id;
     String nama;
     
 }

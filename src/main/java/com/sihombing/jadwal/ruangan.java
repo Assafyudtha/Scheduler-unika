@@ -11,4 +11,5 @@ package com.sihombing.jadwal;
 public class ruangan {
     String id;
     String nama;
+    int kapasitas;
 }
