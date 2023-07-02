@@ -10,6 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.*;
+import com.mysql.jdbc.Driver;
+
 /**
  *
  * @author Rizky David L
@@ -18,6 +21,8 @@ public class DosenUI extends javax.swing.JFrame {
     //tes update github
     private List<dosen> lecturers;
     private DefaultTableModel tableModel;
+    koneksi dbconnect = new koneksi();
+    Connection konnection = dbconnect.getConnection();
     public DosenUI() {
         initComponents();
         lecturers = new ArrayList<>();
@@ -26,7 +31,7 @@ public class DosenUI extends javax.swing.JFrame {
         jButton1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                saveLecturer();
+                saveLecturer(konnection);
             }
         });
         
@@ -42,7 +47,7 @@ public class DosenUI extends javax.swing.JFrame {
 
     }
     
-    private void saveLecturer() {
+    private void saveLecturer(Connection connection) {
         String name = jTextField1.getText();
         String id = jTextField2.getText();
 
@@ -52,18 +57,44 @@ public class DosenUI extends javax.swing.JFrame {
 
             // Add lecturer to the collection
             lecturers.add(lecturer);
+        try{
+            String sql = "insert into dosen (id, namadsn) values (?,?)";
+            
+            try(PreparedStatement statement = connection.prepareStatement(sql)){
+                statement.setString(1, id);
+                statement.setString(2, name);
+                
+                int rowsAffected = statement.executeUpdate();
+                
+                if (rowsAffected > 0){
+                    JOptionPane.showMessageDialog(null, "Sukses Di Simpan");
+                }else{
+                    JOptionPane.showMessageDialog(null, "Gagal Untuk menyimpan");
+                }
 
-            // Add lecturer data to the table model
-            tableModel.addRow(new Object[]{lecturer.getName(), lecturer.getId()});
-
-            // Clear input fields
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        // Clear input fields
             jTextField1.setText("");
             jTextField2.setText("");
         }
+        
     }
     
         private void deleteLecturers() {
         int[] selectedRows = jTable1.getSelectedRows();
+        tableModel = (DefaultTableModel) jTable1.getModel();
+        List<Object> selectedData = new ArrayList<>();
+        
+        int columnIndex = 1;
+         for (int row : selectedRows){
+             Object value = tableModel.getValueAt(row, columnIndex);
+             selectedData.add(value);
+         }
+         
+
 
         // Remove selected rows from both the table model and the underlying collection
         for (int i = selectedRows.length - 1; i >= 0; i--) {
