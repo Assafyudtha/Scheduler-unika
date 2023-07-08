@@ -10,6 +10,13 @@ package com.sihombing.jadwal;
  */
 public class Awal extends javax.swing.JFrame {
 
+DosenUI dosen = new DosenUI();
+JadwalUI matkul = new JadwalUI();
+SusunJadwal susun = new SusunJadwal();
+
+private void hideform(){
+    setVisible(false);
+}
     /**
      * Creates new form Awal
      */
@@ -91,17 +98,18 @@ public class Awal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+hideform();
+matkul.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-new Awal().setVisible(false);
-new DosenUI().setVisible(true);        // TODO add your handling code here:
+hideform();
+dosen.setVisible(true);        // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-new SusunJadwal().setVisible(true);    
-new Awal().setVisible(false);// TODO add your handling code here:
+susun.setVisible(true);    
+hideform();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
@@ -130,7 +138,6 @@ new Awal().setVisible(false);// TODO add your handling code here:
             java.util.logging.Logger.getLogger(Awal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

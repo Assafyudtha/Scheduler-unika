@@ -8,6 +8,15 @@ package com.sihombing.jadwal;
  *
  * @author Rizky David L
  */
+
+//Susun jadwal, aturannya: 
+/*
+1. Gak boleh ada jadwal yang sama 2 kali dalam seminggu, kalaupun ada itu pun dibedakan namanya dengan "Praktek"
+2. Gak boleh ada jadwal yang berbeda tetapi dosen yang sama dalam jam yang bersamaan
+3. Gak boleh ada jadwal yang berbeda tetapi ruangan yang sama pada jam yang bersamaan
+4. Gak boleh ada jadwal yang 
+ada 122 jadwal TI dan lab ada 6 ,ruangan lain ada 5 ruang kelas
+*/
 public class SusunJadwal extends javax.swing.JFrame {
 
 

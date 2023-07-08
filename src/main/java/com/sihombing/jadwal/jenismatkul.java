@@ -9,6 +9,15 @@ package com.sihombing.jadwal;
  * @author Rizky David L
  */
 public enum jenismatkul {
-    Teori,
-    Praktek,
+    Teori(1),
+    Praktek(2);
+    
+    private int value;
+    
+    jenismatkul(int value){
+    this.value = value;
+}
+    public int getValue(){
+        return value;
+    }
 }

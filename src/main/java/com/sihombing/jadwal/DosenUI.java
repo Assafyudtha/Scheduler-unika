@@ -17,8 +17,11 @@ import com.mysql.jdbc.Driver;
  *
  * @author Rizky David L
  */
+
+// Gak bisa reset auto increment kalau isi tabel gak kosong
 public class DosenUI extends javax.swing.JFrame {
     //tes update github
+    codeGenerator code = new codeGenerator();
     private List<dosen> lecturers;
     private DefaultTableModel tableModel;
     koneksi dbconnect = new koneksi();
@@ -42,27 +45,43 @@ public class DosenUI extends javax.swing.JFrame {
             }
         });
         
-        
+        showDsn();
         
 
     }
+    private void showDsn(){
+        try {
+        tableModel.setRowCount(0);
+        Connection connection = dbconnect.getConnection();
+        String query= "select * from dosen";
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(query);
+            while (result.next()) {                
+                String id = result.getString("id");
+                String nama = result.getString("namadsn");
+                tableModel.addRow(new  Object[]{id,nama});
+            }
+            
+            jTable1.setModel(tableModel);
+            result.close();
+            statement.close();
+            connection.close();
+        } catch (SQLException e) {
+        e.printStackTrace();
+        }
+    }
     
     private void saveLecturer(Connection connection) {
-        String name = jTextField1.getText();
-        String id = jTextField2.getText();
-
-        if (!name.isEmpty() && !id.isEmpty()) {
-            // Create Lecturer object
-            dosen lecturer = new dosen(name, id);
-
-            // Add lecturer to the collection
-            lecturers.add(lecturer);
+        String name = jTextField2.getText();
+        String id= jTextField1.getText();
+        if (!name.isEmpty()&&!id.isEmpty()) {
         try{
-            String sql = "insert into dosen (id, namadsn) values (?,?)";
+            String sql = "insert into dosen (id,namadsn) values (?,?)";
             
             try(PreparedStatement statement = connection.prepareStatement(sql)){
                 statement.setString(1, id);
                 statement.setString(2, name);
+
                 
                 int rowsAffected = statement.executeUpdate();
                 
@@ -80,29 +99,48 @@ public class DosenUI extends javax.swing.JFrame {
             jTextField1.setText("");
             jTextField2.setText("");
         }
-        
+        showDsn();
     }
     
         private void deleteLecturers() {
         int[] selectedRows = jTable1.getSelectedRows();
         tableModel = (DefaultTableModel) jTable1.getModel();
-        List<Object> selectedData = new ArrayList<>();
-        
-        int columnIndex = 1;
-         for (int row : selectedRows){
-             Object value = tableModel.getValueAt(row, columnIndex);
-             selectedData.add(value);
-         }
-         
-
-
-        // Remove selected rows from both the table model and the underlying collection
-        for (int i = selectedRows.length - 1; i >= 0; i--) {
-            int modelRow = jTable1.convertRowIndexToModel(selectedRows[i]);
-            tableModel.removeRow(modelRow);
-            lecturers.remove(modelRow);
+        List<Integer> rowsToDelete = new ArrayList<>();
+        for(int selectedRow:selectedRows){
+            rowsToDelete.add(selectedRow);
         }
+        
+         try{
+             Connection connection = dbconnect.getConnection();
+             String sql = "delete from dosen where id =?";
+
+             PreparedStatement statement = connection.prepareStatement(sql);
+
+             for(int selectedRow:rowsToDelete){
+                 String dosId = jTable1.getValueAt(selectedRow, 0).toString();
+                 statement.setString(1, dosId);
+                 code.deleteID(Integer.parseInt(dosId));
+                 int rowsDeleted = statement.executeUpdate();
+                 if(rowsDeleted>0){
+                     System.out.println("Berhasil Dihapus");
+                     JOptionPane.showMessageDialog(null, "Berhasil Di Hapus");
+                 }else{
+                     System.out.println("Gagal menghapus");
+                     JOptionPane.showMessageDialog(null, "Gagal Di Hapus");
+                 }
+             }
+             DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+             for(int i = rowsToDelete.size()-1; i>=0; i--){
+                 int selectedRow = rowsToDelete.get(i);
+                 model.removeRow(selectedRow);
+             }
+// Sampai sini
+         }catch(SQLException e){
+             e.printStackTrace();
+         }
+showDsn();
     }
+           
 
     
     /**
@@ -122,6 +160,7 @@ public class DosenUI extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -130,6 +169,11 @@ public class DosenUI extends javax.swing.JFrame {
         jLabel2.setText("Nama Dosen :");
 
         jButton1.setText("Masukkan");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Hapus");
 
@@ -151,6 +195,13 @@ public class DosenUI extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(jTable1);
 
+        jButton3.setText("Generate ID");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -158,7 +209,7 @@ public class DosenUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
@@ -171,9 +222,12 @@ public class DosenUI extends javax.swing.JFrame {
                                 .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(50, 50, 50)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 34, Short.MAX_VALUE)))
+                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -183,19 +237,32 @@ public class DosenUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(jButton3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2))
+                    .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+code.addExistingID(jTable1);
+int newID = code.generateID(jTable1);
+String id=String.valueOf(newID);
+jTextField1.setText(id);
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -228,6 +295,7 @@ public class DosenUI extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new DosenUI().setVisible(true);
+                
             }
         });
     }
@@ -235,6 +303,7 @@ public class DosenUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane3;
