@@ -9,10 +9,8 @@ package com.sihombing.jadwal;
  * @author Rizky David L
  */
 public class Awal extends javax.swing.JFrame {
-
 DosenUI dosen = new DosenUI();
 JadwalUI matkul = new JadwalUI();
-SusunJadwal susun = new SusunJadwal();
 
 private void hideform(){
     setVisible(false);
@@ -54,7 +52,7 @@ private void hideform(){
             }
         });
 
-        jButton3.setText("Jadwal");
+        jButton3.setText("Ruangan");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -108,7 +106,7 @@ dosen.setVisible(true);        // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-susun.setVisible(true);    
+new RuangIN().setVisible(true);    
 hideform();
     }//GEN-LAST:event_jButton3ActionPerformed
 
