@@ -9,6 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -102,7 +104,47 @@ codeGenerator code = new codeGenerator();
         }
     }
         
+        private void hapusMTK(){
+            int[] selectedRows = jTable1.getSelectedRows();
+        List<Integer> rowsToDelete = new ArrayList<>();
+        for(int selectedRow:selectedRows){
+            rowsToDelete.add(selectedRow);
+        }
+        
+         try{
+             Connection connection = dbconnect.getConnection();
+             String sql = "delete from matakuliah where kdmtk =?";
+
+             PreparedStatement statement = connection.prepareStatement(sql);
+
+             for(int selectedRow:rowsToDelete){
+                 String dosId = jTable1.getValueAt(selectedRow, 0).toString();
+                 statement.setString(1, dosId);
+                 code.deleteID(Integer.parseInt(dosId));
+                 int rowsDeleted = statement.executeUpdate();
+                 if(rowsDeleted>0){
+                     System.out.println("Berhasil Dihapus");
+                     JOptionPane.showMessageDialog(null, "Berhasil Di Hapus");
+                 }else{
+                     System.out.println("Gagal menghapus");
+                     JOptionPane.showMessageDialog(null, "Gagal Di Hapus");
+                 }
+             }
+             DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+             for(int i = rowsToDelete.size()-1; i>=0; i--){
+                 int selectedRow = rowsToDelete.get(i);
+                 model.removeRow(selectedRow);
+             }
+// Sampai sini
+         }catch(SQLException e){
+             e.printStackTrace();
+         }
+showMtk();
+        }
+        
         private void tambahMTK(Connection connection){
+        code.addExistingID(jTable1);
+        int newID = code.generateID(jTable1);
         int selectedRow = jTable2.getSelectedRow();
         int columnIndex= 0;
         String noDosen = null;
@@ -112,16 +154,15 @@ codeGenerator code = new codeGenerator();
         }
          
         String name = jTextField2.getText();
-        String id= jTextField1.getText();
         jenismatkul type = (jenismatkul) jComboBox1.getSelectedItem();
         int jenis = type.getValue();
         String jlh = jTextField3.getText()  ;
-        if (!name.isEmpty()&&!id.isEmpty()) {
+        if (!name.isEmpty()) {
         try{
             String sql = "insert into matakuliah (kdmtk,Matkul,jumlah_mhs,jenismtk,dosen) values (?,?,?,?,?)";
             
             try(PreparedStatement statement = connection.prepareStatement(sql)){
-                statement.setString(1, id);
+                statement.setInt(1, newID);
                 statement.setString(2, name);
                 statement.setInt(4, jenis);
                 statement.setInt(3, Integer.parseInt(jlh));
@@ -171,6 +212,7 @@ codeGenerator code = new codeGenerator();
         jLabel3 = new javax.swing.JLabel();
         jTextField3 = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -222,6 +264,13 @@ codeGenerator code = new codeGenerator();
 
         jLabel4.setText("Jumlah :");
 
+        jButton3.setText("Hapus");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -231,8 +280,8 @@ codeGenerator code = new codeGenerator();
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
@@ -255,7 +304,8 @@ codeGenerator code = new codeGenerator();
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -274,12 +324,13 @@ codeGenerator code = new codeGenerator();
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel3)
+                    .addComponent(jButton3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -303,6 +354,10 @@ jTextField1.setText(id);        // TODO add your handling code here:
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        hapusMTK();        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -342,6 +397,7 @@ jTextField1.setText(id);        // TODO add your handling code here:
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JComboBox<jenismatkul> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

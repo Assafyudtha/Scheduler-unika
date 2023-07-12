@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
 import com.mysql.jdbc.Driver;
+import javax.swing.JOptionPane;
 /**
  *
  * @author assaf
@@ -31,16 +32,19 @@ public class RuangIN extends javax.swing.JFrame {
     public RuangIN() {
         initComponents();
         tRuang = (DefaultTableModel) jTable1.getModel();
-        kolom = jTable1.getColumnModel();
-        kolom.removeColumn(kolom.getColumn(kolIndex));
+        for(jenismatkul tipe:jenismatkul.values()){
+            jComboBox1.addItem(tipe);
+        }
+                showRuang();
 
     }
 
-    private void showRuang(Connection koneksi){
+    private void showRuang(){
         try {
+            Connection konektik = dbconnect.getConnection();
             tRuang.setRowCount(0);
             String kueri = "select * from ruangan";
-            Statement state = koneksi.createStatement();
+            Statement state = konektik.createStatement();
             ResultSet hasil= state.executeQuery(kueri);
             while(hasil.next()){
                 String id = hasil.getString("id");
@@ -60,6 +64,80 @@ public class RuangIN extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
+    
+    private void tambahRuang(Connection koneksi){
+    code.addExistingID(jTable1);
+    int newID = code.generateID(jTable1);
+    String id=String.valueOf(newID);
+    jenismatkul type = (jenismatkul) jComboBox1.getSelectedItem();
+    int jenis = type.getValue();
+    int kapasitas = Integer.parseInt(jTextField2.getText());
+    String nama = jTextField1.getText();
+    if(!nama.isEmpty()){
+        try {
+            String sql = "insert into ruangan (id,namarng,kapasitas,jenis) values (?,?,?,?)";
+            try(PreparedStatement state = koneksi.prepareStatement(sql)){
+                state.setInt(1, newID);
+                state.setString(2,nama);
+                state.setInt(3, kapasitas);
+                state.setInt(4, jenis);
+                
+                int rowsAffected = state.executeUpdate();
+                
+                if(rowsAffected>0){
+                    JOptionPane.showMessageDialog(null, "Sukses Di Simpan");
+
+                }else{
+                    JOptionPane.showMessageDialog(null, "Sukses Di Simpan");
+
+                }
+         
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+        showRuang();
+    }
+    
+    private void hapusRuang(Connection koneksis){
+        int[] selectedRows = jTable1.getSelectedRows();
+        List<Integer> rowsToDelete = new ArrayList<>();
+        for(int selectedRow:selectedRows){
+            rowsToDelete.add(selectedRow);
+        }
+        
+         try{
+             Connection connection = dbconnect.getConnection();
+             String sql = "delete from ruangan where id =?";
+
+             PreparedStatement statement = connection.prepareStatement(sql);
+
+             for(int selectedRow:rowsToDelete){
+                 String dosId = jTable1.getValueAt(selectedRow, 0).toString();
+                 statement.setString(1, dosId);
+                 code.deleteID(Integer.parseInt(dosId));
+                 int rowsDeleted = statement.executeUpdate();
+                 if(rowsDeleted>0){
+                     System.out.println("Berhasil Dihapus");
+                     JOptionPane.showMessageDialog(null, "Berhasil Di Hapus");
+                 }else{
+                     System.out.println("Gagal menghapus");
+                     JOptionPane.showMessageDialog(null, "Gagal Di Hapus");
+                 }
+             }
+             DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+             for(int i = rowsToDelete.size()-1; i>=0; i--){
+                 int selectedRow = rowsToDelete.get(i);
+                 model.removeRow(selectedRow);
+             }
+// Sampai sini
+         }catch(SQLException e){
+             e.printStackTrace();
+         }
+showRuang();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -77,6 +155,8 @@ public class RuangIN extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jTextField2 = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -85,7 +165,7 @@ public class RuangIN extends javax.swing.JFrame {
 
             },
             new String [] {
-                "id", "Nama Ruangan", "Jenis Ruangan"
+                "ID", "Nama Ruangan", "Kapasitas", "Jenis Ruangan"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -116,6 +196,15 @@ public class RuangIN extends javax.swing.JFrame {
             }
         });
 
+        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField2ActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel3.setText("Kapasitas");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -123,6 +212,7 @@ public class RuangIN extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 572, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
@@ -130,16 +220,21 @@ public class RuangIN extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jTextField1))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel3))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(12, 12, 12)
+                                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE))
-                .addContainerGap())
+                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -156,8 +251,12 @@ public class RuangIN extends javax.swing.JFrame {
                         .addComponent(jLabel1)
                         .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -168,12 +267,16 @@ public class RuangIN extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        hapusRuang(konek);        // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        tambahRuang(konek);        // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -213,11 +316,13 @@ public class RuangIN extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<jenismatkul> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
 }
