@@ -47,14 +47,14 @@ public String getHasil(){
     return hasil;
 }
 }
-
+//why i should make array like this ? jam[] timeCodes = jam.values();
 public static RandomizeHasil randomJam(int jatah){
-    List<jam> enumValues = new ArrayList<>();
-    Collections.addAll(enumValues, jam.values());
-    Collections.shuffle(enumValues);
-    
+    StringBuilder hasil = new StringBuilder();
+    Random random = new Random();
+    jam[] kodewaktu = jam.values();
     List<jam> sequence = new ArrayList<>();
-    for (jam kode : enumValues){
+    jam kode= kodewaktu[random.nextInt(kodewaktu.length)];
+    
         if (kode == jam.A || kode== jam.B){
             if(jatah==2){
                     sequence.add(jam.A);
@@ -88,7 +88,7 @@ public static RandomizeHasil randomJam(int jatah){
                     sequence.add(jam.F);
 
                 }
-        }else if(kode == jam.E){
+        }else if(kode == jam.E ||kode == jam.F){
             sequence.add(jam.E);
             sequence.add(jam.F);
         }else if(kode == jam.G||kode == jam.H){
@@ -101,7 +101,7 @@ public static RandomizeHasil randomJam(int jatah){
                     sequence.add(jam.H);
                     sequence.add(jam.I);
                 }
-        }else if(kode == jam.I){
+        }else if(kode == jam.I||kode == jam.J){
             if(jatah==2){
                     sequence.add(jam.I);
                     sequence.add(jam.J);
@@ -112,9 +112,12 @@ public static RandomizeHasil randomJam(int jatah){
                     sequence.add(jam.K);
 
                 }
+        }else if(kode==jam.K){
+                    sequence.add(jam.I);
+                    sequence.add(jam.J);
+                    sequence.add(jam.K);
         }
-    }
-    StringBuilder hasil = new StringBuilder();
+   
     for(jam kd: sequence){
         hasil.append(kd);
     }
