@@ -30,7 +30,7 @@ public class codeGenerator {
     
     public int generateID(JTable table){
         addExistingID(table);
-        int id =1;
+        int id =0;
         
         while(existingIds.contains(id)){
             id++;
