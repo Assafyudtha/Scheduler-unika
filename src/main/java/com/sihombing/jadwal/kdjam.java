@@ -33,7 +33,8 @@ public class kdjam{
 public static class RandomizeHasil{
     private List<jam> sequence;
     private String hasil;
-    
+    private static jam[] kodewaktu = jam.values();
+
     public RandomizeHasil(List<jam> sequence, String hasil){
     this.sequence = sequence;
     this.hasil = hasil;
@@ -48,13 +49,14 @@ public String getHasil(){
 }
 }
 //why i should make array like this ? jam[] timeCodes = jam.values();
-public static RandomizeHasil randomJam(int jatah){
+public static RandomizeHasil randomJam(int jatah, jam[] kodewaktu){
     StringBuilder hasil = new StringBuilder();
     Random random = new Random();
-    jam[] kodewaktu = jam.values();
     List<jam> sequence = new ArrayList<>();
     jam kode= kodewaktu[random.nextInt(kodewaktu.length)];
-    
+    if(kodewaktu==null||kodewaktu.length==0){
+     kodewaktu=jam.values();
+    }
         if (kode == jam.A || kode== jam.B){
             if(jatah==2){
                     sequence.add(jam.A);
@@ -122,8 +124,9 @@ public static RandomizeHasil randomJam(int jatah){
         hasil.append(kd);
     }
     
-    
     return new RandomizeHasil(sequence, hasil.toString().trim());
-}
 
 }
+    }
+    
+
