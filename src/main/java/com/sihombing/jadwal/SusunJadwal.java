@@ -103,7 +103,10 @@ public class SusunJadwal extends javax.swing.JFrame {
     rabu = 
     kamis =
     jumat =
-    
+    jam roster diisi berdasarkan jumlah ruangan, contoh, jika seluruh ruangan dan lab pada jam ABC sudah habis, lanjutkan ke jam CD CDE dan setetursnya
+    cara penjadwalannya, 1 cari teori lalu masukkan ke semua ruangan hingga penuh pada jam AB, jika sudah penuh jam AB, cari matkul yang Praktek lalu isi hingga semua Lab penuh pada ABC
+    setelah itu lanjut ke jam berikutnya
+    cara nya sama dengan metode random pada jam kuliah tapi ini hanya masukkan ke dalam list dan tidak dirandom atau hanya merandom matakuliah
     */
     /**
      * This method is called from within the constructor to initialize the form.
@@ -191,8 +194,8 @@ public class SusunJadwal extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
