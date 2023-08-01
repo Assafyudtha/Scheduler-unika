@@ -15,6 +15,8 @@ public class matakuliah implements Serializable {
     hari hari;
     kdjam jam;
     dosen dosen;
+    int jatah;
+    int jumlahmhs;
     public matakuliah(String id, String nama, jenismatkul tipe, hari hari, kdjam jam, dosen dosen){
         this.id = id;
         this.nama=nama;
@@ -22,5 +24,13 @@ public class matakuliah implements Serializable {
         this.hari=hari;
         this.jam =jam;
         this.dosen = dosen;
+    }
+    public matakuliah(String id, String nama, jenismatkul tipe, int jatah, dosen dosen, int jumlahmhs){
+        this.id = id;
+        this.nama=nama;
+        this.tipe=tipe;
+        this.jatah=jatah;
+        this.dosen=dosen;
+        this.jumlahmhs=jumlahmhs;
     }
 }

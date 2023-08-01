@@ -21,12 +21,13 @@ import com.mysql.jdbc.Driver;
 // Gak bisa reset auto increment kalau isi tabel gak kosong
 public class DosenUI extends javax.swing.JFrame {
     //tes update github
-    Awal awalan = new Awal();
+
     codeGenerator code = new codeGenerator();
     private List<dosen> lecturers;
     private DefaultTableModel tableModel;
     koneksi dbconnect = new koneksi();
     Connection konnection = dbconnect.getConnection();
+
     public DosenUI() {
         initComponents();
         lecturers = new ArrayList<>();
@@ -50,6 +51,7 @@ public class DosenUI extends javax.swing.JFrame {
         
 
     }
+
     private void showDsn(){
         try {
         tableModel.setRowCount(0);
@@ -276,7 +278,7 @@ jTextField1.setText(id);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        awalan.setVisible(true);
+new Awal().setVisible(true);
         setVisible(false);        // TODO add your handling code here:
     }//GEN-LAST:event_jButton4ActionPerformed
 

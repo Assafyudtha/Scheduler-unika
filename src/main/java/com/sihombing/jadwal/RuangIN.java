@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
  * @author assaf
  */
 public class RuangIN extends javax.swing.JFrame {
-    Awal awalan = new Awal();
+
     codeGenerator code = new codeGenerator();
     private List<ruangan> ruang;
     private DefaultTableModel tRuang;
@@ -293,7 +293,7 @@ showRuang();
     }//GEN-LAST:event_jTextField2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-awalan.setVisible(true);
+new Awal().setVisible(true);
         setVisible(false);         // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
 

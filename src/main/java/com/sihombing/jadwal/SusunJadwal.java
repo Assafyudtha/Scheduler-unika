@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import javax.swing.table.DefaultTableModel;
@@ -20,7 +21,9 @@ public class SusunJadwal extends javax.swing.JFrame {
 
     private DefaultTableModel tblmtk;
     private DefaultTableModel tbljad;
-    Awal awalan = new Awal();
+    private DefaultTableModel tblruang;
+
+    Awal awalan;
     koneksi dbconnect = new koneksi();
     Connection koneksi = dbconnect.getConnection();
     codeGenerator code = new codeGenerator();
@@ -28,11 +31,13 @@ public class SusunJadwal extends javax.swing.JFrame {
      * Creates new form MatkulUI
      */
     public SusunJadwal() {
+        this.awalan = new Awal();
         initComponents();
-        
+        tblruang= (DefaultTableModel) jTable3.getModel();
         tblmtk = (DefaultTableModel) jTable2.getModel();
         tbljad = (DefaultTableModel) jTable1.getModel();
         showMtk();
+        ambilRuangan();
     }
     
     private void showMtk(){
@@ -95,6 +100,55 @@ public class SusunJadwal extends javax.swing.JFrame {
         }
     }
     
+    private void Susunacak2(){
+    List<ruangan> listruang = new ArrayList<>();
+    List<matakuliah> listMatkul = new ArrayList<>();
+    for (int row=0; row<jTable2.getRowCount();row++){
+        String namamtk = jTable2.getValueAt(row, 1).toString();
+        dosen dosen = (dosen) jTable2.getValueAt(row, 2);
+        jenismatkul jenis = (jenismatkul) jTable2.getValueAt(row, 3);
+        int jumlah = Integer.parseInt(jTable2.getValueAt(row, 5).toString());
+        int jatahwaktu = Integer.parseInt(jTable2.getValueAt(row, 4).toString());
+        matakuliah matkul = new matakuliah(null,namamtk,jenis,jatahwaktu,dosen,jumlah);
+    }
+    for (int row=0;row<jTable3.getRowCount(); row++){
+        String namaRuang = jTable3.getValueAt(row, 1).toString();
+        String id = jTable3.getValueAt(row,0).toString();
+        int kapasitas = Integer.parseInt(jTable3.getValueAt(row, 2).toString());
+        jenismatkul jenis = (jenismatkul) jTable3.getValueAt(row, 3);
+        ruangan ruang = new ruangan (id,namaRuang,kapasitas, jenis); 
+        listruang.add(ruang);
+    }
+    
+    
+    }
+    
+    private void ambilRuangan(){
+      try {
+            Connection konektik = dbconnect.getConnection();
+            tblruang.setRowCount(0);
+            String kueri = "select * from ruangan";
+            Statement state = konektik.createStatement();
+            ResultSet hasil= state.executeQuery(kueri);
+            while(hasil.next()){
+                String id = hasil.getString("id");
+                String nama = hasil.getString("namarng");
+                String kapasitas = hasil.getString("kapasitas");
+                int jenis = hasil.getInt("jenis");
+                jenismatkul jenisrng = null;
+                if (jenis==1){
+                    jenisrng = jenismatkul.Teori;
+                }else{
+                    jenisrng = jenismatkul.Praktek;
+
+                }
+                tblruang.addRow(new Object[]{id,nama,kapasitas,jenisrng});
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     //jika jatah waktu = 3 maka 3 kali matakuliahnya dibuat, karena satu variable jam hanya bisa 
     //satu enumerator
     /*
@@ -125,6 +179,8 @@ public class SusunJadwal extends javax.swing.JFrame {
         jTable2 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable3 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -171,6 +227,16 @@ public class SusunJadwal extends javax.swing.JFrame {
             }
         });
 
+        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Nama Ruangan", "Kapasitas", "Jenis Ruangan"
+            }
+        ));
+        jScrollPane2.setViewportView(jTable3);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -183,11 +249,17 @@ public class SusunJadwal extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton2))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 413, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 321, Short.MAX_VALUE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(282, 282, 282))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -195,7 +267,8 @@ public class SusunJadwal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
@@ -208,7 +281,7 @@ public class SusunJadwal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -234,7 +307,7 @@ awalan.setVisible(true);
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+   public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -248,15 +321,14 @@ awalan.setVisible(true);
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SusunJadwal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RuangIN.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SusunJadwal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RuangIN.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SusunJadwal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RuangIN.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SusunJadwal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RuangIN.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
@@ -273,8 +345,10 @@ awalan.setVisible(true);
     private javax.swing.JButton jButton3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
+    private javax.swing.JTable jTable3;
     // End of variables declaration//GEN-END:variables
 }
