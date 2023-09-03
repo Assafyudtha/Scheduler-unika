@@ -84,32 +84,28 @@ public class SusunJadwal extends javax.swing.JFrame {
     }
 
     
-    private void Susunacak(){
-        hari haris=null;
-        kdjam jam = new kdjam();
-        kdjam.jam[] waktu = kdjam.jam.values();
-        int rekord = tblmtk.getRowCount();
-        for (int i=0;i<=rekord-1;i++){
-            String matkul = jTable2.getValueAt(i, 1).toString();
-            String dosen = jTable2.getValueAt(i, 2).toString();
-            int jatah = Integer.parseInt(jTable2.getValueAt(i, 4).toString());
-            kdjam.RandomizeHasil hasil = jam.randomJam(jatah,waktu);
-            String strJam = hasil.getHasil();
-            String ruangan ="";
-            tbljad.addRow(new Object[]{haris,strJam,matkul,ruangan,dosen});
-        }
-    }
     
     private void Susunacak2(){
     List<ruangan> listruang = new ArrayList<>();
     List<matakuliah> listMatkul = new ArrayList<>();
+    List<matakuliah> listmtkPrak = new ArrayList<>();
+    int dayidx = 0;
+    int timeidx= 0;
+    matakuliah mtkpilih = null;
+    Random random= new Random();
     for (int row=0; row<jTable2.getRowCount();row++){
         String namamtk = jTable2.getValueAt(row, 1).toString();
-        dosen dosen = (dosen) jTable2.getValueAt(row, 2);
+        String dosen =  jTable2.getValueAt(row, 2).toString();
         jenismatkul jenis = (jenismatkul) jTable2.getValueAt(row, 3);
         int jumlah = Integer.parseInt(jTable2.getValueAt(row, 5).toString());
         int jatahwaktu = Integer.parseInt(jTable2.getValueAt(row, 4).toString());
         matakuliah matkul = new matakuliah(null,namamtk,jenis,jatahwaktu,dosen,jumlah);
+        if(jenis == jenismatkul.Praktek){
+            listmtkPrak.add(matkul);
+        }else{
+            listMatkul.add(matkul);    
+        }
+        
     }
     for (int row=0;row<jTable3.getRowCount(); row++){
         String namaRuang = jTable3.getValueAt(row, 1).toString();
@@ -119,6 +115,131 @@ public class SusunJadwal extends javax.swing.JFrame {
         ruangan ruang = new ruangan (id,namaRuang,kapasitas, jenis); 
         listruang.add(ruang);
     }
+    
+    List<ruangan> fullruangList=new ArrayList<>(listruang);
+    
+    while (!fullruangList.isEmpty()){
+        int randomidx = random.nextInt(fullruangList.size());
+        ruangan pilihan = fullruangList.get(randomidx);
+        fullruangList.remove(randomidx);
+        String namarng = pilihan.getName();
+        jenismatkul tipe = pilihan.getType();
+        if(tipe==jenismatkul.Praktek){
+            if(!listmtkPrak.isEmpty()){
+            mtkpilih = listmtkPrak.remove(0);
+            }
+        }else{
+            if(!listMatkul.isEmpty()){
+            mtkpilih = listMatkul.remove(0);
+            }
+        }
+        String mtk = mtkpilih.getNamamtk();
+        
+        String dsn = mtkpilih.getDosenString();
+        tbljad.addRow(new Object[]{null,null,mtk,namarng,dsn});
+        
+        if (fullruangList.isEmpty()){
+            fullruangList.addAll(listruang);
+        }
+    }
+    
+    
+    
+    }
+    
+    private void Susunacak3(){
+    List<ruangan> listruang = new ArrayList<>();
+    List<ruangan> listruangP = new ArrayList<>();
+
+    List<matakuliah> listMatkul = new ArrayList<>();
+    List<matakuliah> listmtkPrak = new ArrayList<>();
+    List<hari> listhari = new  ArrayList<hari>();
+    List<kdjam> listjam2= new ArrayList<kdjam>();
+    List<kdjam> listjam3= new ArrayList<kdjam>();
+    listhari.add(hari.Senin);
+    listhari.add(hari.Selasa);
+    listhari.add(hari.Rabu);
+    listhari.add(hari.Kamis);
+    listhari.add(hari.Jumat);
+    listhari.add(hari.Sabtu);
+    listjam2.add(kdjam.AB);
+    listjam2.add(kdjam.CD);
+    listjam2.add(kdjam.EF);
+    listjam2.add(kdjam.GH);
+    listjam2.add(kdjam.IJ);
+    listjam2.add(kdjam.ABC);
+    listjam2.add(kdjam.DEF);
+    listjam2.add(kdjam.GHI);
+    listjam2.add(kdjam.IJK);
+
+
+
+    int dayidx = 0;
+    int timeidx= 0;
+    matakuliah mtkpilih = null;
+    Random random= new Random();
+    for (int row=0; row<jTable2.getRowCount();row++){
+        String namamtk = jTable2.getValueAt(row, 1).toString();
+        String dosen =  jTable2.getValueAt(row, 2).toString();
+        jenismatkul jenis = (jenismatkul) jTable2.getValueAt(row, 3);
+        int jumlah = Integer.parseInt(jTable2.getValueAt(row, 5).toString());
+        int jatahwaktu = Integer.parseInt(jTable2.getValueAt(row, 4).toString());
+        matakuliah matkul = new matakuliah(null,namamtk,jenis,jatahwaktu,dosen,jumlah);
+        if(jenis == jenismatkul.Praktek){
+            listmtkPrak.add(matkul);
+        }else{
+            listMatkul.add(matkul);    
+        }
+        
+    }
+    for (int row=0;row<jTable3.getRowCount(); row++){
+        String namaRuang = jTable3.getValueAt(row, 1).toString();
+        String id = jTable3.getValueAt(row,0).toString();
+        int kapasitas = Integer.parseInt(jTable3.getValueAt(row, 2).toString());
+        jenismatkul jenis = (jenismatkul) jTable3.getValueAt(row, 3);
+        ruangan ruang = new ruangan (id,namaRuang,kapasitas, jenis); 
+        if(jenis == jenismatkul.Teori){
+        listruang.add(ruang);
+        }else{
+            listruangP.add(ruang);
+        }
+    }
+    
+    List<ruangan> fullruangTList=new ArrayList<>(listruang);
+    List<ruangan> fullruangPList=new ArrayList<>(listruangP);
+    int index=0;
+    
+    for (hari day:listhari){
+        for(kdjam jam: listjam2){
+            for(ruangan ruang: listruang){
+                ruangan pilihan = ruang;
+                String namarng = pilihan.getName();
+                mtkpilih = listMatkul.remove(0);
+                
+                String mtk = mtkpilih.getNamamtk();
+
+                String dsn = mtkpilih.getDosenString();
+                tbljad.addRow(new Object[]{day,jam,mtk,namarng,dsn});
+            }
+            for(ruangan ruangP : listruangP){
+                ruangan pilihan = ruangP;
+                String namarng = pilihan.getName();
+                mtkpilih = listmtkPrak.remove(0);
+                
+                if(index>=3){
+                    kdjam jamP= listjam3.get(3);
+                }else{
+                    kdjam jamP= listjam3.get(index);
+                }
+                String mtk = mtkpilih.getNamamtk();
+
+                String dsn = mtkpilih.getDosenString();
+                tbljad.addRow(new Object[]{day,jam,mtk,namarng,dsn});
+            }
+            index++;
+        }   
+    }
+    
     
     
     }
@@ -161,6 +282,8 @@ public class SusunJadwal extends javax.swing.JFrame {
     cara penjadwalannya, 1 cari teori lalu masukkan ke semua ruangan hingga penuh pada jam AB, jika sudah penuh jam AB, cari matkul yang Praktek lalu isi hingga semua Lab penuh pada ABC
     setelah itu lanjut ke jam berikutnya
     cara nya sama dengan metode random pada jam kuliah tapi ini hanya masukkan ke dalam list dan tidak dirandom atau hanya merandom matakuliah
+    RALAT, penjadwalan dilakukan sesuai ruangan, jadi ruangan akan di tentukan matkulnya menurut jenis ruangannya sehingga ruangan sesuai pada saat jam kelompokknya
+    Update : Penjdawalan dilakukan dengan membuat 2 kelompok kode waktu, yaitu kelompok jatah waktu 2 dan juga jatah waktu 3
     */
     /**
      * This method is called from within the constructor to initialize the form.
@@ -292,7 +415,7 @@ public class SusunJadwal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-Susunacak();        // TODO add your handling code here:
+Susunacak2();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

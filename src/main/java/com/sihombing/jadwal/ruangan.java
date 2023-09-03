@@ -19,4 +19,11 @@ public class ruangan {
         this.kapasitas = kapasitas;
         this.tipe = tipe;
     }
+    
+    public jenismatkul getType(){
+        return tipe;
+    }
+    public String getName(){
+        return nama;
+    }
 }
