@@ -12,7 +12,7 @@ import com.mysql.jdbc.Driver;
  * @author assaf
  */
 public class koneksi {
-    String db = "jdbc:mysql://localhost/jadwal";
+    String db = "jdbc:mysql://localhost/jadwal4";
     String user="root";
     String password="";
     Connection connection = null;
