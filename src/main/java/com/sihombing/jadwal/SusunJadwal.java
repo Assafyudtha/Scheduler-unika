@@ -234,9 +234,8 @@ public class SusunJadwal extends javax.swing.JFrame {
                                     }else{
                                         
                                     }
-                                jadwal = new Jadwal(day.toString(), listjam2.get(index+1).toString(), mtk, namarng, dsn);
                                 }else{
-                                    break;
+                                jadwal = new Jadwal(day.toString(), listjam2.get(index+1).toString(), mtk, namarng, dsn);
                                 }
                                 
                                 System.out.println(jadwal.getJam().toString());
@@ -265,26 +264,20 @@ public class SusunJadwal extends javax.swing.JFrame {
                 Jadwal jadwal = new Jadwal(day.toString(), jamP.toString(), mtk, namarng, dsn);
                 for(Jadwal jadu:jadwalfin){
                     if(jadwal.getHari()==jadu.getHari()){
-                        if(jadwal.getJam()==jadu.getJam()){
+                        if(checkJam(jadwal.getJam().toString(), jadu.getJam().toString())==true){
                             if(jadwal.getDsn().equals(jadu.getDsn())){
-                                if(index>=3){
-                                    if(indexh>=6){
-                                        System.out.print("Praktek"+jadwal.getJam().toString());
-                                        jadwal = new Jadwal(day.toString(), listjam3.get(index+1).toString(), mtk, namarng, dsn);
-                                        System.out.print("Praktek"+jadwal.getJam().toString());
-
+                                System.out.print(jadwal.getJam().toString());
+                                if(index>=4){
+                                    if(indexh<5){
+                                        jadwal = new Jadwal(listhari.get(indexh+1).toString(), listjam3.get(1).toString(), mtk, namarng, dsn);
                                     }else{
-                                        System.out.print("Praktek"+jadwal.getHari().toString());
-                                        jadwal = new Jadwal(listhari.get(indexh+1).toString(), listjam3.get(0).toString(), mtk, namarng, dsn);
-                                        System.out.print("Praktek"+jadwal.getHari().toString());
-
+                                        
                                     }
-                                    
                                 }else{
-                                  jadwal = new Jadwal(day.toString(), listjam3.get(index+1).toString(), mtk, namarng, dsn);  
+                                jadwal = new Jadwal(day.toString(), listjam3.get(index+1).toString(), mtk, namarng, dsn);
                                 }
                                 
-                                
+                                System.out.println(jadwal.getJam().toString());
                             }
                         }
                     }
