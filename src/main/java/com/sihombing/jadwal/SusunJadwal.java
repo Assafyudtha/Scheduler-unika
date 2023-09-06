@@ -167,10 +167,10 @@ public class SusunJadwal extends javax.swing.JFrame {
     listjam2.add(kdjam.EF);
     listjam2.add(kdjam.GH);
     listjam2.add(kdjam.IJ);
-    listjam2.add(kdjam.ABC);
-    listjam2.add(kdjam.DEF);
-    listjam2.add(kdjam.GHI);
-    listjam2.add(kdjam.IJK);
+    listjam3.add(kdjam.ABC);
+    listjam3.add(kdjam.DEF);
+    listjam3.add(kdjam.GHI);
+    listjam3.add(kdjam.IJK);
 
 
 
@@ -207,11 +207,14 @@ public class SusunJadwal extends javax.swing.JFrame {
     
     List<ruangan> fullruangTList=new ArrayList<>(listruang);
     List<ruangan> fullruangPList=new ArrayList<>(listruangP);
+    List<Jadwal> jadwalfin =new ArrayList<Jadwal>();
     int index=0;
+    int indexh=0;
     
     for (hari day:listhari){
         for(kdjam jam: listjam2){
             for(ruangan ruang: listruang){
+                if(!listMatkul.isEmpty()){
                 ruangan pilihan = ruang;
                 String namarng = pilihan.getName();
                 mtkpilih = listMatkul.remove(0);
@@ -219,25 +222,69 @@ public class SusunJadwal extends javax.swing.JFrame {
                 String mtk = mtkpilih.getNamamtk();
 
                 String dsn = mtkpilih.getDosenString();
+                Jadwal jadwal = new Jadwal(day.toString(), jam.toString(), mtk, namarng, dsn);
+                for(Jadwal jadu:jadwalfin){
+                    if(jadwal.getHari()==jadu.getHari()){
+                        if(jadwal.getJam()==jadu.getJam()){
+                            if(jadwal.getRuang()==jadu.getRuang()||jadwal.getDsn()==jadu.getDsn()){
+                                jadwal = new Jadwal(day.toString(), listjam2.get(index+1).toString(), mtk, namarng, dsn);
+                                
+                            }
+                        }
+                    }
+                }
+                jadwalfin.add(jadwal);
                 tbljad.addRow(new Object[]{day,jam,mtk,namarng,dsn});
+                }
             }
             for(ruangan ruangP : listruangP){
+                if(!listmtkPrak.isEmpty()){
                 ruangan pilihan = ruangP;
                 String namarng = pilihan.getName();
                 mtkpilih = listmtkPrak.remove(0);
-                
+                kdjam jamP;
                 if(index>=3){
-                    kdjam jamP= listjam3.get(3);
+                    jamP= listjam3.get(3);
                 }else{
-                    kdjam jamP= listjam3.get(index);
+                    jamP= listjam3.get(index);
                 }
                 String mtk = mtkpilih.getNamamtk();
 
                 String dsn = mtkpilih.getDosenString();
-                tbljad.addRow(new Object[]{day,jam,mtk,namarng,dsn});
+                Jadwal jadwal = new Jadwal(day.toString(), jamP.toString(), mtk, namarng, dsn);
+                for(Jadwal jadu:jadwalfin){
+                    if(jadwal.getHari()==jadu.getHari()){
+                        if(jadwal.getHari()){
+                            
+                        }
+                        if(jadwal.getJam()==jadu.getJam()){
+                            if(jadwal.getRuang()==jadu.getRuang()||jadwal.getDsn()==jadu.getDsn()){
+                                if(index>=3){
+                                    if(indexh>=6){
+                                        jadwal = new Jadwal(day.toString(), listjam3.get(index+1).toString(), mtk, namarng, dsn);
+
+                                    }else{
+                                        jadwal = new Jadwal(listhari.get(indexh+1).toString(), listjam3.get(0).toString(), mtk, namarng, dsn);
+ 
+                                    }
+                                    
+                                }else{
+                                  jadwal = new Jadwal(day.toString(), listjam3.get(index+1).toString(), mtk, namarng, dsn);  
+                                }
+                                
+                                
+                            }
+                        }
+                    }
+                }
+                jadwalfin.add(jadwal);
+                tbljad.addRow(new Object[]{day,jamP,mtk,namarng,dsn});
+                
+            }
             }
             index++;
-        }   
+        }
+        indexh++;
     }
     
     
@@ -415,7 +462,7 @@ public class SusunJadwal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-Susunacak2();        // TODO add your handling code here:
+Susunacak3();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
