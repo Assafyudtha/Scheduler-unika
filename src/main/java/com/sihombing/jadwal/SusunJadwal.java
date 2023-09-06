@@ -225,35 +225,20 @@ public class SusunJadwal extends javax.swing.JFrame {
                 Jadwal jadwal = new Jadwal(day.toString(), jam.toString(), mtk, namarng, dsn);
                 for(Jadwal jadu:jadwalfin){
                     if(jadwal.getHari()==jadu.getHari()){
-                        if(jadwal.getJam()==jadu.getJam()){
-                            if(jadwal.getRuang()==jadu.getRuang()||jadwal.getDsn()==jadu.getDsn()){
+                        if(checkJam(jadwal.getJam().toString(), jadu.getJam().toString())==true){
+                            if(jadwal.getDsn().equals(jadu.getDsn())){
+                                System.out.print(jadwal.getJam().toString());
+                                if(index>=4){
+                                    if(indexh<5){
+                                        jadwal = new Jadwal(listhari.get(indexh+1).toString(), listjam2.get(1).toString(), mtk, namarng, dsn);
+                                    }else{
+                                        
+                                    }
+                                }else{
                                 jadwal = new Jadwal(day.toString(), listjam2.get(index+1).toString(), mtk, namarng, dsn);
+                                }
                                 
-                            }
-                        }
-                    }
-                }
-                jadwalfin.add(jadwal);
-                tbljad.addRow(new Object[]{day,jam,mtk,namarng,dsn});
-                }
-            }
-            for(ruangan ruangP : listruangP){
-                if(!listmtkPrak.isEmpty()){
-                ruangan pilihan = ruangP;
-                String namarng = pilihan.getName();
-                mtkpilih = listmtkPrak.remove(0);
-                kdjam jamP;
-                if(index>=3){
-                    jamP= listjam3.get(3);
-                }else{
-                    jamP= listjam3.get(index);
-                }
-                String mtk = mtkpilih.getNamamtk();
-
-                String dsn = mtkpilih.getDosenString();
-                Jadwal jadwal = new Jadwal(day.toString(), jamP.toString(), mtk, namarng, dsn);
-                for(Jadwal jadu:jadwalfin){
-                    if(jadwal.getHari()==jadu.getHari()){
+                                System.out.println(jadwal.getJam().toString());
                         if(jadwal.getHari()){
                             
                         }
@@ -272,24 +257,35 @@ public class SusunJadwal extends javax.swing.JFrame {
                                   jadwal = new Jadwal(day.toString(), listjam3.get(index+1).toString(), mtk, namarng, dsn);  
                                 }
                                 
-                                
-                            }
-                        }
+        private boolean checkJam(String jam1, String jam2){
+        if(jam1.length()>=jam2.length()){
+            for(int i=0;i>=jam1.length();i++){
+                char char1 = jam1.charAt(i);
+                for(int k=0;k>=jam2.length();k++){
+                    char char2 = jam2.charAt(k);
+                    if(char1 == char2 ){
+                        adaSama = true;
+                        break;
                     }
                 }
-                jadwalfin.add(jadwal);
-                tbljad.addRow(new Object[]{day,jamP,mtk,namarng,dsn});
-                
             }
+        }else{
+            for(int i=0;i>=jam2.length();i++){
+                char char1 = jam2.charAt(i);
+                for(int k=0;k>=jam2.length();k++){
+                    char char2 = jam1.charAt(k);
+                    if(char1 == char2 ){
+                        adaSama = true;
+                        break;
+                    }
+                }
             }
-            index++;
         }
-        indexh++;
+        return adaSama;
+        
+        
     }
-    
-    
-    
-    }
+            
     
     private void ambilRuangan(){
       try {
