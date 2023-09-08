@@ -224,21 +224,21 @@ public class SusunJadwal extends javax.swing.JFrame {
                 String dsn = mtkpilih.getDosenString();
                 Jadwal jadwal = new Jadwal(day.toString(), jam.toString(), mtk, namarng, dsn);
                 for(Jadwal jadu:jadwalfin){
-                    if(jadwal.getHari()==jadu.getHari()){
-                        if(checkJam(jadwal.getJam().toString(), jadu.getJam().toString())==true){
+                    if(jadwal.getHari().equals(jadu.getHari())){
+                        if(checkJam(jadwal.getJam(), jadu.getJam())){
                             if(jadwal.getDsn().equals(jadu.getDsn())){
-                                System.out.print(jadwal.getJam().toString());
-                                if(index>=4){
+                                System.out.print(jadwal.getJam());
+                                if(index>=2){
                                     if(indexh<5){
-                                        jadwal = new Jadwal(listhari.get(indexh+1).toString(), listjam2.get(1).toString(), mtk, namarng, dsn);
+                                        jadwal = new Jadwal(listhari.get(indexh+1).toString(), listjam2.get(0).toString(), mtk, namarng, dsn);
                                     }else{
-                                        
+                                    jadwal = new Jadwal(day.toString(), listjam2.get(index).toString(), mtk, namarng, dsn);    
                                     }
                                 }else{
                                 jadwal = new Jadwal(day.toString(), listjam2.get(index+1).toString(), mtk, namarng, dsn);
                                 }
                                 
-                                System.out.println(jadwal.getJam().toString());
+                                System.out.println(jadwal.getJam());
                             }
                         }
                     }
@@ -264,14 +264,15 @@ public class SusunJadwal extends javax.swing.JFrame {
                 Jadwal jadwal = new Jadwal(day.toString(), jamP.toString(), mtk, namarng, dsn);
                 for(Jadwal jadu:jadwalfin){
                     if(jadwal.getHari()==jadu.getHari()){
-                        if(checkJam(jadwal.getJam().toString(), jadu.getJam().toString())==true){
+                        if(checkJam(jadwal.getJam().toString(), jadu.getJam().toString())){
                             if(jadwal.getDsn().equals(jadu.getDsn())){
                                 System.out.print(jadwal.getJam().toString());
-                                if(index>=4){
+                                if(index>=3){
                                     if(indexh<5){
                                         jadwal = new Jadwal(listhari.get(indexh+1).toString(), listjam3.get(1).toString(), mtk, namarng, dsn);
-                                    }else{
-                                        
+                                    }else
+                                    {
+                                     jadwal = new Jadwal(day.toString(), listjam3.get(index).toString(), mtk, namarng, dsn);
                                     }
                                 }else{
                                 jadwal = new Jadwal(day.toString(), listjam3.get(index+1).toString(), mtk, namarng, dsn);
@@ -291,37 +292,28 @@ public class SusunJadwal extends javax.swing.JFrame {
         }
         indexh++;
     }
+    }
             
     
-    private boolean checkJam(String jam1, String jam2){
-        boolean adaSama= false;
-        if(jam1.length()>=jam2.length()){
-            for(int i=0;i>=jam1.length();i++){
-                char char1 = jam1.charAt(i);
-                for(int k=0;k>=jam2.length();k++){
-                    char char2 = jam2.charAt(k);
-                    if(char1 == char2 ){
-                        adaSama = true;
-                        break;
-                    }
-                }
-            }
-        }else{
-            for(int i=0;i>=jam2.length();i++){
-                char char1 = jam2.charAt(i);
-                for(int k=0;k>=jam2.length();k++){
-                    char char2 = jam1.charAt(k);
-                    if(char1 == char2 ){
-                        adaSama = true;
-                        break;
-                    }
-                }
+    private boolean checkJam(String jam1, String jam2) {
+    boolean adaSama = false;
+
+    for (int i = 0; i < jam1.length(); i++) {
+        char char1 = jam1.charAt(i);
+
+        for (int k = 0; k < jam2.length(); k++) {
+            char char2 = jam2.charAt(k);
+
+            if (char1 == char2) {
+                adaSama = true;
+                break;
             }
         }
-        return adaSama;
-        
-        
     }
+
+    return adaSama;
+}
+
             
     
     private void ambilRuangan(){
