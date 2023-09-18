@@ -74,36 +74,36 @@ public class DosenUI extends javax.swing.JFrame {
         }
     }
     
-    private void saveLecturer(Connection connection) {
-        String name = jTextField2.getText();
-        String id= jTextField1.getText();
-        if (!name.isEmpty()&&!id.isEmpty()) {
-        try{
-            String sql = "insert into dosen (id,namadsn) values (?,?)";
-            
-            try(PreparedStatement statement = connection.prepareStatement(sql)){
-                statement.setString(1, id);
-                statement.setString(2, name);
+private void saveLecturer(Connection connection) {
+    String name = jTextField2.getText();
+    String id= jTextField1.getText();
+    if (!name.isEmpty()&&!id.isEmpty()) {
+    try{
+        String sql = "insert into dosen (id,namadsn) values (?,?)";
 
-                
-                int rowsAffected = statement.executeUpdate();
-                
-                if (rowsAffected > 0){
-                    JOptionPane.showMessageDialog(null, "Sukses Di Simpan");
-                }else{
-                    JOptionPane.showMessageDialog(null, "Gagal Untuk menyimpan");
-                }
+        try(PreparedStatement statement = connection.prepareStatement(sql)){
+            statement.setString(1, id);
+            statement.setString(2, name);
 
+
+            int rowsAffected = statement.executeUpdate();
+
+            if (rowsAffected > 0){
+                JOptionPane.showMessageDialog(null, "Sukses Di Simpan");
+            }else{
+                JOptionPane.showMessageDialog(null, "Gagal Untuk menyimpan");
             }
-        }catch(SQLException e){
-            e.printStackTrace();
+
         }
-        // Clear input fields
-            jTextField1.setText("");
-            jTextField2.setText("");
-        }
-        showDsn();
+    }catch(SQLException e){
+        e.printStackTrace();
     }
+    // Clear input fields
+        jTextField1.setText("");
+        jTextField2.setText("");
+    }
+    showDsn();
+}
     
         private void deleteLecturers() {
         int[] selectedRows = jTable1.getSelectedRows();

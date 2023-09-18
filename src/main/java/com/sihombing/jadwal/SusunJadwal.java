@@ -171,9 +171,6 @@ public class SusunJadwal extends javax.swing.JFrame {
     listjam3.add(kdjam.DEF);
     listjam3.add(kdjam.GHI);
     listjam3.add(kdjam.IJK);
-
-
-
     int dayidx = 0;
     int timeidx= 0;
     matakuliah mtkpilih = null;
@@ -204,7 +201,6 @@ public class SusunJadwal extends javax.swing.JFrame {
             listruangP.add(ruang);
         }
     }
-    
     List<ruangan> fullruangTList=new ArrayList<>(listruang);
     List<ruangan> fullruangPList=new ArrayList<>(listruangP);
     List<Jadwal> jadwalfin =new ArrayList<Jadwal>();
@@ -228,8 +224,8 @@ public class SusunJadwal extends javax.swing.JFrame {
                         if(checkJam(jadwal.getJam(), jadu.getJam())){
                             if(jadwal.getDsn().equals(jadu.getDsn())){
                                 System.out.print(jadwal.getJam());
-                                if(index>=2){
-                                    if(indexh<5){
+                                if(index>=4){
+                                    if(indexh<6){
                                         jadwal = new Jadwal(listhari.get(indexh+1).toString(), listjam2.get(0).toString(), mtk, namarng, dsn);
                                     }else{
                                     jadwal = new Jadwal(day.toString(), listjam2.get(index).toString(), mtk, namarng, dsn);    
@@ -244,7 +240,7 @@ public class SusunJadwal extends javax.swing.JFrame {
                     }
                 }
                 jadwalfin.add(jadwal);
-                tbljad.addRow(new Object[]{day,jam,mtk,namarng,dsn});
+                tbljad.addRow(new Object[]{jadwal.getHari(),jadwal.getJam(),jadwal.getNama(),jadwal.getRuang(),jadwal.getDsn()});
                 }
             }
             for(ruangan ruangP : listruangP){
@@ -264,11 +260,15 @@ public class SusunJadwal extends javax.swing.JFrame {
                 Jadwal jadwal = new Jadwal(day.toString(), jamP.toString(), mtk, namarng, dsn);
                 for(Jadwal jadu:jadwalfin){
                     if(jadwal.getHari()==jadu.getHari()){
-                        if(checkJam(jadwal.getJam().toString(), jadu.getJam().toString())){
+                        if(checkJam(jadwal.getJam(), jadu.getJam())){
                             if(jadwal.getDsn().equals(jadu.getDsn())){
-                                System.out.print(jadwal.getJam().toString());
+                                System.out.print(jadwal.getNama());
+
+                                System.out.print(jadwal.getNama());
+                                System.out.print(jadwal.getDsn().equals(jadu.getDsn()));
+                                System.out.print(jadwal.getJam());
                                 if(index>=3){
-                                    if(indexh<5){
+                                    if(indexh<6){
                                         jadwal = new Jadwal(listhari.get(indexh+1).toString(), listjam3.get(1).toString(), mtk, namarng, dsn);
                                     }else
                                     {
@@ -284,7 +284,7 @@ public class SusunJadwal extends javax.swing.JFrame {
                     }
                 }
                 jadwalfin.add(jadwal);
-                tbljad.addRow(new Object[]{day,jamP,mtk,namarng,dsn});
+                tbljad.addRow(new Object[]{jadwal.getHari(),jadwal.getJam(),jadwal.getNama(),jadwal.getRuang(),jadwal.getDsn()});
                 
             }
             }
@@ -292,6 +292,82 @@ public class SusunJadwal extends javax.swing.JFrame {
         }
         indexh++;
     }
+    index = 0;
+    indexh=0;
+    for(Jadwal jadu:jadwalfin){
+        Jadwal jadwal = jadwalfin.get(index-1);
+        if(jadwal!=null){
+            if(jadwal.getHari()==jadu.getHari()){
+                if(checkJam(jadwal.getJam(), jadu.getJam())){
+                    if(jadwal.getDsn().equals(jadu.getDsn())){
+                                    System.out.print(jadwal.getNama());
+                                    System.out.print(jadwal.getNama());
+                                    System.out.print(jadwal.getDsn().equals(jadu.getDsn()));
+                                    System.out.print(jadwal.getJam());
+                                    
+                                    if(jadwal.getJam().toString().length()==3){
+                                        if(index>=3){
+                                            if(indexh<6){
+                                                jadwal = new Jadwal(listhari.get(indexh+1).toString(), listjam3.get(0).toString(), jadwal.getNama(), jadwal.getRuang(), jadwal.getDsn());
+                                            }else
+                                            {
+                                             jadwal = new Jadwal(jadwal.getHari(), listjam3.get(index).toString(), jadwal.getNama(), jadwal.getRuang(), jadwal.getDsn());
+                                            }
+                                        }else{
+                                        jadwal = new Jadwal(jadwal.getHari(), listjam3.get(index+1).toString(), jadwal.getNama(), jadwal.getRuang(), jadwal.getDsn());
+                                        }
+                                    }else{
+                                        if(index>=4){
+                                            if(indexh<6){
+                                                 jadwal = new Jadwal(listhari.get(indexh+1).toString(), listjam2.get(0).toString(), jadwal.getNama(), jadwal.getRuang(), jadwal.getDsn());
+                                            }else{
+                                             jadwal = new Jadwal(jadwal.getHari(), listjam2.get(index).toString(), jadwal.getNama(), jadwal.getRuang(), jadwal.getDsn());    
+                                            }
+                                        }else{
+                                         jadwal = new Jadwal(jadwal.getHari(), listjam2.get(index+1).toString(), jadwal.getNama(), jadwal.getRuang(), jadwal.getDsn());
+                                        } 
+                                    }
+
+                                    System.out.println(jadwal.getJam().toString());
+                                    jadwalfin.remove(jadu);
+                                    jadwalfin.add(jadwal);
+                                    
+                    }
+                    if(jadwal.getRuang().equals(jadu.getRuang())){
+                        if(jadwal.getJam().length()==3){
+                                        if(index>=3){
+                                            if(indexh<6){
+                                                jadwal = new Jadwal(listhari.get(indexh+1).toString(), listjam3.get(0).toString(), jadwal.getNama(), jadwal.getRuang(), jadwal.getDsn());
+                                            }else
+                                            {
+                                             jadwal = new Jadwal(jadwal.getHari(), listjam3.get(index).toString(), jadwal.getNama(), jadwal.getRuang(), jadwal.getDsn());
+                                            }
+                                        }else{
+                                        jadwal = new Jadwal(jadwal.getHari(), listjam3.get(index+1).toString(), jadwal.getNama(), jadwal.getRuang(), jadwal.getDsn());
+                                        }
+                                    }else{
+                                        if(index>=4){
+                                            if(indexh<6){
+                                                 jadwal = new Jadwal(listhari.get(indexh+1).toString(), listjam2.get(0).toString(), jadwal.getNama(), jadwal.getRuang(), jadwal.getDsn());
+                                            }else{
+                                             jadwal = new Jadwal(jadwal.getHari(), listjam2.get(index).toString(), jadwal.getNama(), jadwal.getRuang(), jadwal.getDsn());    
+                                            }
+                                        }else{
+                                         jadwal = new Jadwal(jadwal.getHari(), listjam2.get(index+1).toString(), jadwal.getNama(), jadwal.getRuang(), jadwal.getDsn());
+                                        } 
+                                    }
+                    }
+                    index++;
+                }
+            indexh++;
+            }
+        }
+    }
+    tbljad.setRowCount(0);
+    for(Jadwal jadfix: jadwalfin){
+        tbljad.addRow(new Object[]{jadfix.getHari(),jadfix.getJam(),jadfix.getNama(),jadfix.getRuang(),jadfix.getDsn()});
+    }
+    
     }
             
     
@@ -438,23 +514,20 @@ public class SusunJadwal extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jButton3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton2))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 562, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 321, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(282, 282, 282))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addContainerGap())))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

@@ -145,55 +145,53 @@ codeGenerator code = new codeGenerator();
 showMtk();
         }
         
-        private void tambahMTK(Connection connection){
-        code.addExistingID(jTable1);
-        int newID = code.generateID(jTable1);
-        int selectedRow = jTable2.getSelectedRow();
-        int columnIndex= 0;
-        int jatah = Integer.parseInt(jTextField4.getText());
-        String noDosen = null;
-        if(selectedRow !=-1){
-            Object idDos = jTable2.getValueAt(selectedRow, columnIndex);
-             noDosen = idDos.toString();
-        }
-         
-        String name = jTextField2.getText();
-        jenismatkul type = (jenismatkul) jComboBox1.getSelectedItem();
-        int jenis = type.getValue();
-        String jlh = jTextField3.getText()  ;
-        if (!name.isEmpty()) {
-        try{
-            String sql = "insert into matakuliah (kdmtk,Matkul,jumlah_mhs,jenismtk,dosen,jlh_waktu) values (?,?,?,?,?,?)";
-            
-            try(PreparedStatement statement = connection.prepareStatement(sql)){
-                statement.setInt(1, newID);
-                statement.setString(2, name);
-                statement.setInt(4, jenis);
-                statement.setInt(3, Integer.parseInt(jlh));
-                statement.setString(5, noDosen);
-                statement.setInt(6, jatah);
-                
+private void tambahMTK(Connection connection){
+code.addExistingID(jTable1);
+int newID = code.generateID(jTable1);
+int selectedRow = jTable2.getSelectedRow();
+int columnIndex= 0;
+int jatah = Integer.parseInt(jTextField4.getText());
+String noDosen = null;
+if(selectedRow !=-1){
+    Object idDos = jTable2.getValueAt(selectedRow, columnIndex);
+     noDosen = idDos.toString();
+}
 
-                
-                int rowsAffected = statement.executeUpdate();
-                
-                if (rowsAffected > 0){
-                    JOptionPane.showMessageDialog(null, "Sukses Di Simpan");
-                }else{
-                    JOptionPane.showMessageDialog(null, "Gagal Untuk menyimpan");
-                }
+String name = jTextField2.getText();
+jenismatkul type = (jenismatkul) jComboBox1.getSelectedItem();
+int jenis = type.getValue();
+String jlh = jTextField3.getText()  ;
+if (!name.isEmpty()) {
+try{
+    String sql = "insert into matakuliah (kdmtk,Matkul,jumlah_mhs,jenismtk,dosen,jlh_waktu) values (?,?,?,?,?,?)";
 
-            }
-        }catch(SQLException e){
-            e.printStackTrace();
-        }
-        // Clear input fields
-            jTextField2.setText("");
-            jTextField3.setText("");
+    try(PreparedStatement statement = connection.prepareStatement(sql)){
+        statement.setInt(1, newID);
+        statement.setString(2, name);
+        statement.setInt(4, jenis);
+        statement.setInt(3, Integer.parseInt(jlh));
+        statement.setString(5, noDosen);
+        statement.setInt(6, jatah);
 
+        int rowsAffected = statement.executeUpdate();
+
+        if (rowsAffected > 0){
+            JOptionPane.showMessageDialog(null, "Sukses Di Simpan");
+        }else{
+            JOptionPane.showMessageDialog(null, "Gagal Untuk menyimpan");
         }
-        showMtk();
-        }
+
+    }
+}catch(SQLException e){
+    e.printStackTrace();
+}
+// Clear input fields
+    jTextField2.setText("");
+    jTextField3.setText("");
+
+}
+showMtk();
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

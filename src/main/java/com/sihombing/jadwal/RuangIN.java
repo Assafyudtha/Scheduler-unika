@@ -66,40 +66,40 @@ public class RuangIN extends javax.swing.JFrame {
         }
     }
     
-    private void tambahRuang(Connection koneksi){
-    code.addExistingID(jTable1);
-    int newID = code.generateID(jTable1);
-    String id=String.valueOf(newID);
-    jenismatkul type = (jenismatkul) jComboBox1.getSelectedItem();
-    int jenis = type.getValue();
-    int kapasitas = Integer.parseInt(jTextField2.getText());
-    String nama = jTextField1.getText();
-    if(!nama.isEmpty()){
-        try {
-            String sql = "insert into ruangan (id,namarng,kapasitas,jenis) values (?,?,?,?)";
-            try(PreparedStatement state = koneksi.prepareStatement(sql)){
-                state.setInt(1, newID);
-                state.setString(2,nama);
-                state.setInt(3, kapasitas);
-                state.setInt(4, jenis);
-                
-                int rowsAffected = state.executeUpdate();
-                
-                if(rowsAffected>0){
-                    JOptionPane.showMessageDialog(null, "Sukses Di Simpan");
+private void tambahRuang(Connection koneksi){
+code.addExistingID(jTable1);
+int newID = code.generateID(jTable1);
+String id=String.valueOf(newID);
+jenismatkul type = (jenismatkul) jComboBox1.getSelectedItem();
+int jenis = type.getValue();
+int kapasitas = Integer.parseInt(jTextField2.getText());
+String nama = jTextField1.getText();
+if(!nama.isEmpty()){
+    try {
+        String sql = "insert into ruangan (id,namarng,kapasitas,jenis) values (?,?,?,?)";
+        try(PreparedStatement state = koneksi.prepareStatement(sql)){
+            state.setInt(1, newID);
+            state.setString(2,nama);
+            state.setInt(3, kapasitas);
+            state.setInt(4, jenis);
 
-                }else{
-                    JOptionPane.showMessageDialog(null, "Sukses Di Simpan");
+            int rowsAffected = state.executeUpdate();
 
-                }
-         
+            if(rowsAffected>0){
+                JOptionPane.showMessageDialog(null, "Sukses Di Simpan");
+
+            }else{
+                JOptionPane.showMessageDialog(null, "Sukses Di Simpan");
+
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+
         }
+    } catch (Exception e) {
+        e.printStackTrace();
     }
-        showRuang();
-    }
+}
+    showRuang();
+}
     
     private void hapusRuang(Connection koneksis){
         int[] selectedRows = jTable1.getSelectedRows();
