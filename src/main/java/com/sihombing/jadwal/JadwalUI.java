@@ -21,7 +21,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Rizky David L
  */
 public class JadwalUI extends javax.swing.JFrame {
-    Awal awalan = new Awal();
+    Main awalan = new Main();
 private DefaultTableModel tbldosen;
 private DefaultTableModel tblmtk;
 koneksi dbconnect = new koneksi();

@@ -23,7 +23,7 @@ public class SusunJadwal extends javax.swing.JFrame {
     private DefaultTableModel tbljad;
     private DefaultTableModel tblruang;
 
-    Awal awalan;
+    Main awalan;
     koneksi dbconnect = new koneksi();
     Connection koneksi = dbconnect.getConnection();
     codeGenerator code = new codeGenerator();
@@ -31,7 +31,7 @@ public class SusunJadwal extends javax.swing.JFrame {
      * Creates new form MatkulUI
      */
     public SusunJadwal() {
-        this.awalan = new Awal();
+        this.awalan = new Main();
         initComponents();
         tblruang= (DefaultTableModel) jTable3.getModel();
         tblmtk = (DefaultTableModel) jTable2.getModel();
@@ -294,10 +294,11 @@ public class SusunJadwal extends javax.swing.JFrame {
     }
     index = 0;
     indexh=0;
-    for(Jadwal jadu:jadwalfin){
-        Jadwal jadwal = jadwalfin.get(index-1);
-        if(jadwal!=null){
-            if(jadwal.getHari()==jadu.getHari()){
+    ArrayList<Jadwal> jadwalnew = new ArrayList<>(jadwalfin);
+    for(Jadwal jadwal:jadwalnew){
+        for(Jadwal jadu:jadwalnew){
+            if(jadwal!=jadu){
+                if(jadwal.getHari()==jadu.getHari()){
                 if(checkJam(jadwal.getJam(), jadu.getJam())){
                     if(jadwal.getDsn().equals(jadu.getDsn())){
                                     System.out.print(jadwal.getNama());
@@ -305,7 +306,7 @@ public class SusunJadwal extends javax.swing.JFrame {
                                     System.out.print(jadwal.getDsn().equals(jadu.getDsn()));
                                     System.out.print(jadwal.getJam());
                                     
-                                    if(jadwal.getJam().toString().length()==3){
+                                    if(jadwal.getJam().length()==3){
                                         if(index>=3){
                                             if(indexh<6){
                                                 jadwal = new Jadwal(listhari.get(indexh+1).toString(), listjam3.get(0).toString(), jadwal.getNama(), jadwal.getRuang(), jadwal.getDsn());
@@ -328,7 +329,80 @@ public class SusunJadwal extends javax.swing.JFrame {
                                         } 
                                     }
 
-                                    System.out.println(jadwal.getJam().toString());
+                                    System.out.println(jadwal.getJam());
+                                    jadwalfin.remove(jadu);
+                                    jadwalfin.add(jadwal);
+                                    
+                    }
+                    if(jadwal.getRuang().equals(jadu.getRuang())){
+                        if(jadwal.getJam().length()==3){
+                                        if(index>=3){
+                                            if(indexh<6){
+                                                jadwal = new Jadwal(listhari.get(indexh+1).toString(), listjam3.get(0).toString(), jadwal.getNama(), jadwal.getRuang(), jadwal.getDsn());
+                                            }else
+                                            {
+                                             jadwal = new Jadwal(jadwal.getHari(), listjam3.get(index).toString(), jadwal.getNama(), jadwal.getRuang(), jadwal.getDsn());
+                                            }
+                                        }else{
+                                        jadwal = new Jadwal(jadwal.getHari(), listjam3.get(index+1).toString(), jadwal.getNama(), jadwal.getRuang(), jadwal.getDsn());
+                                        }
+                                    }else{
+                                        if(index>=4){
+                                            if(indexh<6){
+                                                 jadwal = new Jadwal(listhari.get(indexh+1).toString(), listjam2.get(0).toString(), jadwal.getNama(), jadwal.getRuang(), jadwal.getDsn());
+                                            }else{
+                                             jadwal = new Jadwal(jadwal.getHari(), listjam2.get(index).toString(), jadwal.getNama(), jadwal.getRuang(), jadwal.getDsn());    
+                                            }
+                                        }else{
+                                         jadwal = new Jadwal(jadwal.getHari(), listjam2.get(index+1).toString(), jadwal.getNama(), jadwal.getRuang(), jadwal.getDsn());
+                                        } 
+                                    }
+                                    System.out.println(jadwal.getJam());
+                                    jadwalfin.remove(jadu);
+                                    jadwalfin.add(jadwal);
+                    }
+                    index++;
+                }
+            indexh++;
+            }
+            }
+        }
+    }
+   /* for(Jadwal jadu:jadwalnew){
+        Jadwal jadwal = jadwalnew.get(index-1);
+        if(jadwal!=null){
+            if(jadwal.getHari()==jadu.getHari()){
+                if(checkJam(jadwal.getJam(), jadu.getJam())){
+                    if(jadwal.getDsn().equals(jadu.getDsn())){
+                                    System.out.print(jadwal.getNama());
+                                    System.out.print(jadwal.getNama());
+                                    System.out.print(jadwal.getDsn().equals(jadu.getDsn()));
+                                    System.out.print(jadwal.getJam());
+                                    
+                                    if(jadwal.getJam().length()==3){
+                                        if(index>=3){
+                                            if(indexh<6){
+                                                jadwal = new Jadwal(listhari.get(indexh+1).toString(), listjam3.get(0).toString(), jadwal.getNama(), jadwal.getRuang(), jadwal.getDsn());
+                                            }else
+                                            {
+                                             jadwal = new Jadwal(jadwal.getHari(), listjam3.get(index).toString(), jadwal.getNama(), jadwal.getRuang(), jadwal.getDsn());
+                                            }
+                                        }else{
+                                        jadwal = new Jadwal(jadwal.getHari(), listjam3.get(index+1).toString(), jadwal.getNama(), jadwal.getRuang(), jadwal.getDsn());
+                                        }
+                                    }else{
+                                        if(index>=4){
+                                            if(indexh<6){
+                                                 jadwal = new Jadwal(listhari.get(indexh+1).toString(), listjam2.get(0).toString(), jadwal.getNama(), jadwal.getRuang(), jadwal.getDsn());
+                                            }else{
+                                             jadwal = new Jadwal(jadwal.getHari(), listjam2.get(index).toString(), jadwal.getNama(), jadwal.getRuang(), jadwal.getDsn());    
+                                            }
+                                        }else{
+                                         jadwal = new Jadwal(jadwal.getHari(), listjam2.get(index+1).toString(), jadwal.getNama(), jadwal.getRuang(), jadwal.getDsn());
+                                        } 
+                                    }
+
+                                    System.out.println(jadwal.getJam());
                                     jadwalfin.remove(jadu);
                                     jadwalfin.add(jadwal);
                                     
@@ -362,7 +436,7 @@ public class SusunJadwal extends javax.swing.JFrame {
             indexh++;
             }
         }
-    }
+    }*/
     tbljad.setRowCount(0);
     for(Jadwal jadfix: jadwalfin){
         tbljad.addRow(new Object[]{jadfix.getHari(),jadfix.getJam(),jadfix.getNama(),jadfix.getRuang(),jadfix.getDsn()});
@@ -575,37 +649,7 @@ awalan.setVisible(true);
     /**
      * @param args the command line arguments
      */
-   public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(RuangIN.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(RuangIN.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(RuangIN.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(RuangIN.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new SusunJadwal().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
